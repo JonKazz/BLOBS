@@ -31,6 +31,7 @@ def main_loop():
     clock = pygame.time.Clock()
     player = Player()
     
+    # Game state variables
     run = True
     game_over = True
     has_won = False
@@ -42,19 +43,21 @@ def main_loop():
     is_show_vel = False
     is_show_dist = False
     
+    # Spawn frequency variables
     spawn_speed = 20
     blob_loop = 0
+    
     score = 0
     high_score = 0
     start_animation_num = 50
     
     while run:
-
         clock.tick(FPS)
         
-        for event in pygame.event.get():
+        for event in pygame.event.get(): # Gets all keyboard inputs
             if event.type == pygame.QUIT:
                 run = False
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE: # Debug mode if press 'space'
                     is_paused = not is_paused
@@ -65,7 +68,7 @@ def main_loop():
                         is_show_dist = False
                         is_show_size = not is_show_size
                     
-                    if event.key == pygame.K_v: # Shows size if press 'v'
+                    if event.key == pygame.K_v: # Shows velocity if press 'v'
                         is_show_size = False
                         is_show_dist = False
                         is_show_vel = not is_show_vel
@@ -85,16 +88,16 @@ def main_loop():
                         player.radius -= 2
                  
                     
-                        
-            if event.type == pygame.MOUSEBUTTONDOWN and game_over:
+            if event.type == pygame.MOUSEBUTTONDOWN and game_over: # Starting screen
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 
-                # For game over screen
+                # For 'press to start' in starting screen
                 if mouse_x > 425 and mouse_x < 475 and mouse_y > 225 and mouse_y < 275:
                     start_animation = True
                     score = 0
-                    
-        if start_animation:
+
+
+        if start_animation: # Grows\h'press to start' circle until it fills screen, it will then start the game
             pygame.draw.circle(WIN, BACKGROUND_COLOR, [WIN_WIDTH/2, WIN_HEIGHT/2], start_animation_num)
             draw_player(player)
             if start_animation_num < 700:
@@ -130,7 +133,7 @@ def main_loop():
             for blob in blob_group:
                 if blob.is_touching(player):
                     if blob.can_eat(player):
-                        player.radius = 10
+                        player.radius = 10 # Resets player size
                         game_over = True
                         if score > high_score:
                             high_score = score
